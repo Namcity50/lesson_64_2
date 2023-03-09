@@ -22,7 +22,11 @@
         <property name="cardService" ref="cardService1"/>
     </bean>
     <!---->
-    <bean name="authService" class="service.AuthService"/>
+    <bean name="authService" class="service.AuthService">
+        <property name="profileController" ref="profileController"/>
+        <property name="adminController" ref="adminController"/>
+        <property name="profileRepository" ref="profileRepository"/>
+    </bean>
     <bean name="authController" class="controller.AuthController">
         <property name="authService" ref="authService"/>
     </bean>
