@@ -13,11 +13,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class CardService {
-    private TransactionService transactionService = ComponentContainer.transactionService;
-    private TerminalService terminalService = ComponentContainer.terminalService;
-
-    private ProfileService profileService = ComponentContainer.profileService;
-
+    private TransactionService transactionService;
+    private TerminalService terminalService;
+    private ProfileService profileService;
+    private CardRepository cardRepository;
     public void addCardToProfile(String phone, String cardNum) {
         CardRepository cardRepository = ComponentContainer.cardRepository;
         Card exists = cardRepository.getCardByNumber(cardNum);
@@ -38,7 +37,6 @@ public class CardService {
     }
 
     public void userChangeCardStatus(String phone, String cardNumber) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card card = cardRepository.getCardByNumber(cardNumber);
         if (card == null) {
             System.out.println("Card not found");
@@ -60,44 +58,35 @@ public class CardService {
     }
 
     public void userDeleteCard(String phone, String cardNumber) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card card = cardRepository.getCardByNumber(cardNumber);
         if (card == null) {
             System.out.println("Card not found");
             return;
         }
-
         if (card.getPhone() == null || !card.getPhone().equals(phone)) {
             System.out.println("Card not belongs to you");
             return;
         }
-
         int n = cardRepository.deleteCard(cardNumber);
         if (n != 0) {
             System.out.println("Card deleted");
         }
     }
-
     public void adminCreateCard(String cardNumber, String expiredDate) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card exist = cardRepository.getCardByNumber(cardNumber);
         if (exist != null) {
             System.out.println("Card Number is exist");
             return;
         }
-
         Card card = new Card();
         card.setCardNumber(cardNumber);
-
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         LocalDate localDate = LocalDate.parse(expiredDate, timeFormatter);
         card.setExpDate(localDate);
-
         card.setBalance(0d);
         card.setStatus(GeneralStatus.ACTIVE);
         card.setCreatedDate(LocalDateTime.now());
         int n = cardRepository.save(card);
-
         if (n != 0) {
             System.out.println("Card successfully added");
             return;
@@ -107,7 +96,6 @@ public class CardService {
     }
 
     public void cardList() {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         List<Card> cardList = cardRepository.getList();
         for (Card card : cardList) {
             System.out.println(card);
@@ -115,7 +103,6 @@ public class CardService {
     }
 
     public void adminDeleteCard(String cardNumber) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card card = cardRepository.getCardByNumber(cardNumber);
         if (card == null) {
             System.out.println("Card not found");
@@ -128,36 +115,29 @@ public class CardService {
     }
 
     public void adminChangeStatus(String cardNumber) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card card = cardRepository.getCardByNumber(cardNumber);
         if (card == null) {
             System.out.println("Card not found");
             return;
         }
-
         if (card.getStatus().equals(GeneralStatus.ACTIVE)) {
             cardRepository.updateCardStatus(cardNumber, GeneralStatus.BLOCK);
         } else if (card.getStatus().equals(GeneralStatus.BLOCK)) {
             cardRepository.updateCardStatus(cardNumber, GeneralStatus.ACTIVE);
         }
-
     }
 
     public void adminUpdateCard(String cardNumber, String expiredDate) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card exist = cardRepository.getCardByNumber(cardNumber);
         if (exist == null) {
             System.out.println("Card not found");
             return;
         }
-
         Card card = new Card();
         card.setCardNumber(cardNumber);
-
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         LocalDate localDate = LocalDate.parse(expiredDate, timeFormatter);
         card.setExpDate(localDate);
-
         int n = cardRepository.updateCard(card);
         if (n != 0) {
             System.out.println("Card Updated");
@@ -165,7 +145,6 @@ public class CardService {
     }
 
     public void userRefillCard(String phone, String cardNumber, Double amount) {
-        CardRepository cardRepository = ComponentContainer.cardRepository;
         Card card = cardRepository.getCardByNumber(cardNumber);
         if (card == null) {
             System.out.println("Card not found");
@@ -181,4 +160,19 @@ public class CardService {
         transactionService.createTransaction(card.getId(), null, amount, TransactionType.ReFill);
     }
 
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    public void setTerminalService(TerminalService terminalService) {
+        this.terminalService = terminalService;
+    }
+
+    public void setProfileService(ProfileService profileService) {
+        this.profileService = profileService;
+    }
+
+    public void setCardRepository(CardRepository cardRepository) {
+        this.cardRepository = cardRepository;
+    }
 }

@@ -6,21 +6,79 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.springframework.org/schema/context
          http://www.springframework.org/schema/context/spring-context.xsd">
-    <bean name="profileRepository" class="repository.ProfileRepository"/>
-
-    <bean name="authService" class="service.AuthService">
-        <property name="profileRepository" ref="profileRepository"/>
+    <!---->
+    <bean name="profileService" class="service.ProfileService"/>
+    <bean name="adminController" class="controller.AdminController">
+        <property name="profileService" ref="profileService"/>
     </bean>
-
-
-    <bean name="authController" class="controller.AuthController">
-        <property name="authService"  ref="authService"/>
+    <!---->
+    <bean name="terminalService" class="service.TerminalService"/>
+    <bean name="adminController1" class="controller.AdminController">
+        <property name="terminalService" ref="terminalService"/>
     </bean>
-
+    <!---->
+    <bean name="cardService1" class="service.CardService"/>
+    <bean name="adminController2" class="controller.AdminController">
+        <property name="cardService" ref="cardService1"/>
+    </bean>
+    <!---->
     <bean name="authService" class="service.AuthService"/>
-
     <bean name="authController" class="controller.AuthController">
         <property name="authService" ref="authService"/>
     </bean>
-
+    <!---->
+    <bean name="cardService2" class="service.CardService"/>
+    <bean name="profileController" class="controller.ProfileController">
+        <property name="cardService" ref="cardService2"/>
+    </bean>
+    <!---->
+    <bean name="profileRepository" class="repository.ProfileRepository"/>
+    <bean name="authService1" class="service.AuthService">
+        <property name="profileRepository" ref="profileRepository"/>
+    </bean>
+    <!---->
+    <bean name="adminController3" class="controller.AdminController"/>
+    <bean name="authService2" class="service.AuthService">
+        <property name="adminController" ref="adminController3"/>
+    </bean>
+    <!---->
+    <bean name="profileController1" class="controller.ProfileController"/>
+    <bean name="authService3" class="service.AuthService">
+        <property name="profileController" ref="profileController1"/>
+    </bean>
+    <!---->
+    <bean name="transactionService" class="service.TransactionService"/>
+    <bean name="cardService3" class="service.CardService">
+        <property name="transactionService" ref="transactionService"/>
+    </bean>
+    <!---->
+    <bean name="terminalService1" class="service.TerminalService"/>
+    <bean name="cardService4" class="service.CardService">
+        <property name="terminalService" ref="terminalService1"/>
+    </bean>
+    <!---->
+    <bean name="profileService2" class="service.ProfileService"/>
+    <bean name="cardService5" class="service.CardService">
+        <property name="profileService" ref="profileService2"/>
+    </bean>
+    <!---->
+    <bean name="profileRepository1" class="repository.ProfileRepository"/>
+    <bean name="profileService3" class="service.ProfileService">
+        <property name="profileRepository" ref="profileRepository1"/>
+    </bean>
+    <!---->
+    <bean name="cardService6" class="service.CardService"/>
+    <bean name="profileService4" class="service.ProfileService">
+        <property name="cardService" ref="cardService6"/>
+    </bean>
+    <!---->
+    <bean name="terminalRepository" class="repository.TerminalRepository"/>
+    <bean name="terminalService2" class="service.TerminalService">
+        <property name="terminalRepository" ref="terminalRepository"/>
+    </bean>
+    <!---->
+    <bean name="transactionRepository" class="repository.TransactionRepository"/>
+    <bean name="transactionService1" class="service.TransactionService">
+        <property name="transactionRepository" ref="transactionRepository"/>
+    </bean>
 </beans>

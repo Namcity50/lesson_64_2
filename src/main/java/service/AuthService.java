@@ -15,13 +15,13 @@ import util.MD5Util;
 import java.time.LocalDateTime;
 
 public class AuthService {
-
+    private AdminController adminController;
+    private ProfileController profileController;
+    private ProfileRepository profileRepository;
     public AuthService() {
 
     }
-    private ProfileRepository profileRepository;
     public void login(String phone, String password) {
-        //ProfileRepository profileRepository = ComponentContainer.profileRepository;
         Profile profile = profileRepository.getProfileByPhoneAndPassword(phone, MD5Util.encode(password));
 
         if (profile == null) {
@@ -36,39 +36,38 @@ public class AuthService {
 
         ComponentContainer.currentProfile = profile;
         if (profile.getRole().equals(ProfileRole.ADMIN)) {
-            AdminController adminController = new AdminController();
             adminController.start();
         } else if (profile.getRole().equals(ProfileRole.USER)) {
-            ProfileController profileController = new ProfileController();
             profileController.start();
         } else {
             System.out.println("You don't have any role.");
         }
-
     }
-
     public void registration(Profile profile) {
-        //ProfileRepository profileRepository = ComponentContainer.profileRepository;
-        // check
         Boolean exist = profileRepository.isPhoneExist(profile.getPhone()); // unique
         if (exist) {
             System.out.println(" Phone already exist.");
             return;
         }
-
         profile.setStatus(GeneralStatus.ACTIVE);
         profile.setCreatedDate(LocalDateTime.now());
         profile.setRole(ProfileRole.USER);
         profile.setPassword(MD5Util.encode(profile.getPassword()));
         int result = profileRepository.saveProfile(profile);
-
         if (result != 0) {
             System.out.println("Profile created.");
         }
-
     }
 
     public void setProfileRepository(ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
+    }
+
+    public void setAdminController(AdminController adminController) {
+        this.adminController = adminController;
+    }
+
+    public void setProfileController(ProfileController profileController) {
+        this.profileController = profileController;
     }
 }

@@ -8,7 +8,7 @@ import util.ScannerUtil;
 import java.util.Scanner;
 
 public class ProfileController {
-    private CardService cardService = new CardService();
+    private CardService cardService;
 
     public void start() {
         boolean b = true;
@@ -66,7 +66,6 @@ public class ProfileController {
 
     private void addCard() {
         System.out.print("Enter card number: ");
-
         Scanner scanner = new Scanner(System.in);
         String cardNumber = scanner.nextLine();
         Profile profile = ComponentContainer.currentProfile;
@@ -101,7 +100,6 @@ public class ProfileController {
         System.out.print("Enter card number: ");
         Scanner scanner = new Scanner(System.in);
         String cardNumber = scanner.nextLine();
-
         System.out.print("Enter amount: ");
         Double amount = scanner.nextDouble();
         Profile profile = ComponentContainer.currentProfile;
@@ -120,5 +118,7 @@ public class ProfileController {
 
     }
 
-
+    public void setCardService(CardService cardService) {
+        this.cardService = cardService;
+    }
 }

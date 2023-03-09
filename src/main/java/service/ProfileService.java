@@ -9,12 +9,11 @@ import java.util.List;
 
 public class ProfileService {
 
-    private ProfileRepository profileRepository = new ProfileRepository();
-    private CardService cardService = ComponentContainer.cardService;
+    private ProfileRepository profileRepository;
+    private CardService cardService;
 
     public void profileList() {
         List<Profile> profileList = profileRepository.getProfileList();
-
         for (Profile profile : profileList) {
             System.out.println(profile);
         }
@@ -34,4 +33,11 @@ public class ProfileService {
         }
     }
 
+    public void setProfileRepository(ProfileRepository profileRepository) {
+        this.profileRepository = profileRepository;
+    }
+
+    public void setCardService(CardService cardService) {
+        this.cardService = cardService;
+    }
 }
